@@ -1,3 +1,18 @@
+"""
+Autor       : Lucas Cruz
+Data        : 9 de setembro 2026
+Descrição   : Este código implementa um Perceptron de um único neurônio, 
+              treinado para representar as portas lógicas AND e OR.
+Observações : 
+    1. Uma particularidade nesta implementação é que o limiar é fixo em 1.
+    O que equivale a um bias fixo de valor -1. Significando que a rede
+    aprende os pesos, mas não aprende o bias.
+
+    2. Essa rede funciona para as portas lógicas AND e OR. No entanto,
+    um único Perceptron não consegue representar a porta lógica XOR, 
+    pois ela não é linearmente separável. Nesse caso, como o while 
+    não tem limite de épocas, o treinamento não terminaria.
+"""
 import numpy as np
 
 # ===========================================================
@@ -13,7 +28,7 @@ def activation_fuction(u: int, z: int = 1) -> int:
 
 def processing(inputs: np.array, weights: np.array) -> int:
     return np.dot(inputs, weights)
-        
+
 
 def update_weights(
         weights: np.array,
@@ -30,7 +45,7 @@ def update_weights(
 #   - Matriz de entrada
 # ===========================================================
 
-# matriz de entradas (cada coluna é um vetor de entradas)
+# matriz de entradas (cada linha é um vetor de entradas)
 X = np.array([
     [0, 0],
     [0, 1],
