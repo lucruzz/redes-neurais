@@ -5,7 +5,7 @@ Descrição   : Este código implementa um Perceptron de um único neurônio,
               treinado para representar as portas lógicas AND e OR.
 Observações : 
     1. O bias permite que o neurônio aprenda o ponto a partir do qual 
-        deve ativar.
+    deve ativar.
 
     2. Essa rede funciona para as portas lógicas AND e OR. No entanto,
         um único Perceptron não consegue representar a porta lógica XOR, 
@@ -14,7 +14,10 @@ Observações :
 
     3. Essencialmente, o bias é um parâmetro adicional treinável e pode
         ser representado por uma entrada constante, com peso ajustável. 
-        Então, basta incluí-lo como uma entrada da rede.
+        Então, basta incluí-lo como uma
+        entrada da rede.
+    
+    4. O bias dessa implementação é inicializados com peso aleatórios. 
 """
 import numpy as np
 
@@ -46,23 +49,22 @@ def update_weights(
 # Entradas: 
 #   - Vetor resposta
 #   - Matriz de entrada
+#   - Bias
 # ===========================================================
 
-bias_input = -1
+bias = -1
 
 # matriz de entradas (cada linha é um vetor de entradas)
 X = np.array([
-    [bias_input, 0, 0],
-    [bias_input, 0, 1],
-    [bias_input, 1, 0],
-    [bias_input, 1, 1]
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
 ])
 
 # vetor resposta
-# AND
-Y = np.array([0, 0, 0, 1])
-# OR
-# Y = np.array([0, 1, 1, 1])
+# XOR
+Y = np.array([0, 1, 1, 0])
 
 # ===========================================================
 # Hiperparâmetros:
@@ -75,8 +77,12 @@ lr = 0.3
 # vetor de saídas
 y_pred = np.array([])
 
-# inicialização do vetor de pesos sinápticos
-W = np.array([0, 0, 0])
+# configuração da semnete para reproduzção dos mesmos números aleatórios 
+# em execuções diferentes. Sem ela, cada execução irá gerar valores diferentes.
+np.random.seed(42)
+
+# inicialização do vetor de pesos sinápticos de forma aleatória
+W = np.random.rand(2)
 
 # número de épocas
 nepochs = 0
@@ -102,7 +108,7 @@ while not np.array_equal(Y, y_pred):
         #               /   \---------------------------/
         #   x2 --> w2 -/
         #
-        v = processing(x, W)
+        v = processing(x, W) + bias
 
         # aplica a função de ativação sobre a saída intermediária
         # 
@@ -111,15 +117,17 @@ while not np.array_equal(Y, y_pred):
 
         # calcula o erro 
         # pelo último valor da saída intermediária encontrada
-        # 
         delta = y - tmp[-1]
 
-        # atualização dos pesos
+        # atualização dos pesos da entrada
         W = update_weights(W, delta, x, lr)
+
+        # atualização do bias
+        bias = bias + lr * delta
 
     y_pred = np.append(y_pred, tmp)
 
     nepochs += 1
-    print(f'Época {nepochs} :: y_pred: {y_pred} - W: {W}')
+    print(f'Época {nepochs} :: y_pred: {y_pred} - W: {W} - bias: {bias}')
 
 print(y_pred)
