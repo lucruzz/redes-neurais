@@ -21,4 +21,3 @@ class Layer():
 
     def foward_pass(self, inputs: np.array):
         return [ neuron.foward_pass(inputs) for neuron in self.neurons ]
-        
